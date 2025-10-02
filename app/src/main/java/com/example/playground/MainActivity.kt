@@ -11,6 +11,8 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.ui.Modifier
+import androidx.navigation.compose.rememberNavController
+import com.example.playground.navigation.AppNavigation
 import com.example.playground.ui.features.UI
 import com.example.playground.ui.theme.PlayGroundTheme
 
@@ -20,20 +22,12 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            PlayGroundTheme {
-                Scaffold(
-                    modifier = Modifier.fillMaxSize(),
-                    topBar = {
-                        TopAppBar(title = { Text("Compose Basics — Controls & List") })
-                    },
-                ) { innerPadding ->
+            // Top-level navController (controls Login <-> Main)
+            val navController = rememberNavController()
 
-                    // Call the ui Function in an outside file
-                    UI(
-                        modifier = Modifier
-                            .padding(innerPadding)
-                    )
-                }
+            PlayGroundTheme {
+                // AppNavigation hosts the top-level graph
+                AppNavigation(navController = navController)
             }
         }
     }
