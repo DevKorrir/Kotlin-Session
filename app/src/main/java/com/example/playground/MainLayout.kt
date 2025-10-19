@@ -1,4 +1,4 @@
-package com.example.playground.navigation
+package com.example.playground
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
@@ -30,6 +30,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.example.playground.navigation.Screen
 import kotlinx.coroutines.launch
 
 

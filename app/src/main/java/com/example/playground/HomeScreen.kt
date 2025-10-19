@@ -1,4 +1,4 @@
-package com.example.playground.navigation
+package com.example.playground
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column

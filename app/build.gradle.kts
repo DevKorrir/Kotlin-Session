@@ -61,4 +61,13 @@ dependencies {
     // nagication library
     implementation("androidx.navigation:navigation-compose:2.9.5") // for nav
 
+    // nagication library
+    implementation("androidx.navigation:navigation-compose:2.9.5") // for nav
+
+    // Coil for image loading
+    implementation(libs.coil.compose)
+
+    //extend icons
+    implementation("androidx.compose.material:material-icons-extended-android:1.7.8")
+
 }

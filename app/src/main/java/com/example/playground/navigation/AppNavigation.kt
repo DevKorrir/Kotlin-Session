@@ -10,7 +10,8 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.example.playground.navigation.view.LoginScreen
+import com.example.playground.LoginScreen
+import com.example.playground.MainLayout
 
 // --- Navigation Graph ---
 @OptIn(ExperimentalMaterial3Api::class)
