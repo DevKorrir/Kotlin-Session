@@ -34,7 +34,8 @@ fun AppNavigation(
                         navController.navigate(Screen.Main.route) {
                             popUpTo(Screen.Login.route) { inclusive = true }
                         }
-                    }
+                    },
+                    navController = navController
                 )
             }
 
