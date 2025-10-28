@@ -1,4 +1,4 @@
-package com.example.playground
+package com.example.playground.ui.features.profile.view
 
 import android.content.Intent
 import android.net.Uri
@@ -53,6 +53,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
+import com.example.playground.R
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 

@@ -1,4 +1,4 @@
-package com.example.playground.ui.features
+package com.example.playground
 
 import android.annotation.SuppressLint
 import android.widget.Toast
@@ -49,10 +49,11 @@ import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.playground.R
 
 @SuppressLint("DefaultLocale")
 @Composable
@@ -170,9 +171,9 @@ fun UI(
                     // Configure the keyboard type and behavior.
                     keyboardOptions = KeyboardOptions(
                         // Change the keyboard's "Enter" button to a "Done" button.
-                        imeAction = androidx.compose.ui.text.input.ImeAction.Done,
+                        imeAction = ImeAction.Done,
                         // Automatically capitalize the first letter of each word.
-                        capitalization = androidx.compose.ui.text.input.KeyboardCapitalization.Words
+                        capitalization = KeyboardCapitalization.Words
                     )
                 )
 

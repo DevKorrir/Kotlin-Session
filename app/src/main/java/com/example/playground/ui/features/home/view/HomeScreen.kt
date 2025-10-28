@@ -1,4 +1,4 @@
-package com.example.playground
+package com.example.playground.ui.features.home.view
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
