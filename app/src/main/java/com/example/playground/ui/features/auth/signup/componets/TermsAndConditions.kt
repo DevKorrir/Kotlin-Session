@@ -1,4 +1,4 @@
-package com.example.dlete.ui.features.auth.signup.componets
+package com.example.playground.ui.features.auth.signup.componets
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Row

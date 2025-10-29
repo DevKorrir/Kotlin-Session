@@ -9,7 +9,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
-import com.example.dlete.ui.features.auth.signup.componets.AppColors
+import com.example.playground.ui.features.auth.signup.componets.AppColors
 
 @Composable
 fun LogInLink(
