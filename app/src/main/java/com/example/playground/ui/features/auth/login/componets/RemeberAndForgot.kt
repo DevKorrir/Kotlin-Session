@@ -27,7 +27,7 @@ fun RememberAndForgot (
         Checkbox(
             checked = isRememberMe,
             onCheckedChange = {
-                onRememberChange(!isRememberMe)
+                onRememberChange(it)
             },
             colors = CheckboxDefaults.colors(
                 checkedColor = AppColors.Primary,

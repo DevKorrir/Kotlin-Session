@@ -5,10 +5,12 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -16,6 +18,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.playground.ui.features.auth.signup.componets.AppColors
@@ -24,6 +27,7 @@ import com.example.playground.ui.features.auth.signup.componets.RegisterTitle
 import com.example.playground.ui.features.auth.signup.componets.SignInLink
 import com.example.playground.ui.features.auth.signup.componets.TermsAndConditions
 import com.example.playground.navigation.Screen
+import com.example.playground.ui.features.auth.signup.view.RegisterForm
 
 
 @Composable
@@ -37,6 +41,84 @@ fun RegisterScreen2(
     var isPasswordVisible by remember { mutableStateOf(false) }
     var isConfirmPasswordVisible by remember { mutableStateOf(false) }
     var isTermsAccepted by remember { mutableStateOf(false) }
+
+    // Simple error states - just like AgriScreen
+    var nameError by remember { mutableStateOf("") }
+    var emailError by remember { mutableStateOf("") }
+    var passwordError by remember { mutableStateOf("") }
+    var confirmPasswordError by remember { mutableStateOf("") }
+    var termsError by remember { mutableStateOf("") }
+
+    fun isValidEmail(email: String): Boolean {
+        return android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()
+    }
+
+    fun calculatePasswordStrength(password: String): Int {
+        var strength = 0
+        if (password.length >= 8) strength++
+        if (password.any { it.isDigit() }) strength++
+        if (password.any { it.isLowerCase() }) strength++
+        if (password.any { it.isUpperCase() }) strength++
+        return strength
+    }
+
+    fun validateForm(): Boolean {
+        var isValid = true
+
+        // Clear previous errors
+        nameError = ""
+        emailError = ""
+        passwordError = ""
+        confirmPasswordError = ""
+        termsError = ""
+
+        // Name validation
+        if (fullName.trim().isEmpty()) {
+            nameError = "Name is required"
+            isValid = false
+        } else if (fullName.trim().length < 3) {
+            nameError = "Name must be at least 3 characters"
+            isValid = false
+        }
+
+        // Email validation
+        if (email.trim().isEmpty()) {
+            emailError = "Email is required"
+            isValid = false
+        } else if (!isValidEmail(email)) {
+            emailError = "Enter a valid email address"
+            isValid = false
+        }
+
+        // Password validation
+        if (password.isEmpty()) {
+            passwordError = "Password is required"
+            isValid = false
+        } else if (password.length < 8) {
+            passwordError = "Password must be at least 8 characters"
+            isValid = false
+        } else if (calculatePasswordStrength(password) < 3) {
+            passwordError = "Password is too weak"
+            isValid = false
+        }
+
+        // Confirm password validation
+        if (confirmPassword.isEmpty()) {
+            confirmPasswordError = "Please confirm your password"
+            isValid = false
+        } else if (confirmPassword != password) {
+            confirmPasswordError = "Passwords don't match"
+            isValid = false
+        }
+
+        // Terms validation
+        if (!isTermsAccepted) {
+            termsError = "You must accept terms and conditions"
+            isValid = false
+        }
+
+        return isValid
+    }
 
     Box(
         modifier = Modifier
@@ -76,17 +158,35 @@ fun RegisterScreen2(
 
             RegisterForm(
                 fullName = fullName,
-                onFullNameChange = { fullName = it },
+                onFullNameChange = {
+                    fullName = it
+                    if (nameError.isNotEmpty()) nameError = "" // Clear error when typing
+                },
                 email = email,
-                onEmailChange = { email = it },
+                onEmailChange = {
+                    email = it
+                    if (emailError.isNotEmpty()) emailError = ""
+                },
                 password = password,
-                onPasswordChange = { password = it },
+                onPasswordChange = {
+                    password = it
+                    if (passwordError.isNotEmpty()) passwordError = ""
+                },
                 isPasswordVisible = isPasswordVisible,
                 onPasswordVisibilityToggle = { isPasswordVisible = !isPasswordVisible },
                 confirmPassword = confirmPassword,
-                onConfirmPasswordChange = { confirmPassword = it },
+                onConfirmPasswordChange = {
+                    confirmPassword = it
+                    if (confirmPasswordError.isNotEmpty()) confirmPasswordError = ""
+                },
                 isConfirmPasswordVisible = isConfirmPasswordVisible,
-                onConfirmPasswordVisibilityToggle = { isConfirmPasswordVisible = !isConfirmPasswordVisible }
+                onConfirmPasswordVisibilityToggle = {
+                    isConfirmPasswordVisible = !isConfirmPasswordVisible
+                },
+                nameError = nameError,
+                emailError = emailError,
+                passwordError = passwordError,
+                confirmPasswordError = confirmPasswordError
             )
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -96,11 +196,24 @@ fun RegisterScreen2(
                 onAcceptedChange = { isTermsAccepted = it }
             )
 
+            if (termsError.isNotEmpty()) {
+                Text(
+                    text = termsError,
+                    color = Color.Red,
+                    modifier = Modifier.fillMaxWidth()
+                )
+            }
+
             Spacer(modifier = Modifier.height(24.dp))
 
             ReuseAbleButton(
                 text = "Sign up",
-                onClick = { /* TODO: Handle sign up */ }
+                onClick = {
+                    if (validateForm()) {
+                        // Navigate to the main screen
+                        //navController.navigate(Screen.Main.route)
+                    }
+                }
             )
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -114,4 +227,8 @@ fun RegisterScreen2(
             Spacer(modifier = Modifier.height(32.dp))
         }
     }
+
+
+
+
 }

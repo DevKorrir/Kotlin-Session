@@ -1,6 +1,7 @@
-package com.example.dlete.ui.features.auth.signup.presentation.view
+package com.example.playground.ui.features.auth.signup.view
 
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
@@ -8,8 +9,10 @@ import androidx.compose.material.icons.filled.EditNote
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.LockOpen
 import androidx.compose.material.icons.filled.MailOutline
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
@@ -29,7 +32,11 @@ fun RegisterForm(
     confirmPassword: String,
     onConfirmPasswordChange: (String) -> Unit,
     isConfirmPasswordVisible: Boolean,
-    onConfirmPasswordVisibilityToggle: () -> Unit
+    onConfirmPasswordVisibilityToggle: () -> Unit,
+    nameError: String = "",
+    emailError: String = "",
+    passwordError: String = "",
+    confirmPasswordError: String = ""
 ) {
     ReuseAbleTextField(
         value = fullName,
@@ -45,6 +52,14 @@ fun RegisterForm(
 
     )
 
+    if (nameError.isNotEmpty()) {
+        Text(
+            text = nameError,
+            color = Color.Red,
+            modifier = Modifier.fillMaxWidth()
+        )
+    }
+
     Spacer(modifier = Modifier.height(16.dp))
 
     ReuseAbleTextField(
@@ -59,6 +74,14 @@ fun RegisterForm(
         ),
         maxLines = 1,
     )
+
+    if (emailError.isNotEmpty()) {
+        Text(
+            text = emailError,
+            color = Color.Red,
+            modifier = Modifier.fillMaxWidth()
+        )
+    }
 
     Spacer(modifier = Modifier.height(16.dp))
 
@@ -76,6 +99,14 @@ fun RegisterForm(
         ),
     )
 
+    if (passwordError.isNotEmpty()) {
+        Text(
+            text = passwordError,
+            color = Color.Red,
+            modifier = Modifier.fillMaxWidth()
+        )
+    }
+
     Spacer(modifier = Modifier.height(16.dp))
 
     ReuseAbleTextField(
@@ -91,4 +122,12 @@ fun RegisterForm(
             imeAction = ImeAction.Done
         ),
     )
+
+    if (confirmPasswordError.isNotEmpty()) {
+        Text(
+            text = confirmPasswordError,
+            color = Color.Red,
+            modifier = Modifier.fillMaxWidth()
+        )
+    }
 }
