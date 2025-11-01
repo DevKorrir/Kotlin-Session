@@ -10,7 +10,7 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.example.dlete.ui.features.auth.signup.presentation.view.RegisterScreen2
+import com.example.playground.ui.features.auth.signup.view.RegisterScreen2
 import com.example.playground.ui.features.auth.login.view.LoginScreen
 
 // --- Navigation Graph ---

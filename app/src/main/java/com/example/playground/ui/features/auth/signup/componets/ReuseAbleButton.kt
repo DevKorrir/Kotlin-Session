@@ -17,7 +17,8 @@ import androidx.compose.ui.unit.sp
 fun ReuseAbleButton(
     text: String,
     onClick: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    enabled: Boolean = true
 ) {
     Button(
         onClick = onClick,
@@ -27,7 +28,8 @@ fun ReuseAbleButton(
         colors = ButtonDefaults.buttonColors(
             containerColor = Color(0xFF2D5016)
         ),
-        shape = RoundedCornerShape(12.dp)
+        shape = RoundedCornerShape(12.dp),
+        enabled = enabled
     ) {
         Text(
             text = text,

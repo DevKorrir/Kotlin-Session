@@ -1,5 +1,6 @@
-package com.example.dlete.ui.features.auth.signup.presentation.view
+package com.example.playground.ui.features.auth.signup.view
 
+import android.util.Patterns
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -12,6 +13,8 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -20,6 +23,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.playground.ui.features.auth.signup.componets.AppColors
 import com.example.playground.ui.features.auth.signup.componets.ReuseAbleButton
@@ -27,12 +31,15 @@ import com.example.playground.ui.features.auth.signup.componets.RegisterTitle
 import com.example.playground.ui.features.auth.signup.componets.SignInLink
 import com.example.playground.ui.features.auth.signup.componets.TermsAndConditions
 import com.example.playground.navigation.Screen
-import com.example.playground.ui.features.auth.signup.view.RegisterForm
+import com.example.playground.ui.features.auth.authShared.AuthState
+import com.example.playground.ui.features.auth.signup.viewModel.SignupViewModel
 
 
 @Composable
 fun RegisterScreen2(
-    navController: NavController
+    navController: NavController,
+    signUpViewModel: SignupViewModel = viewModel()
+
 ) {
     var fullName by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
@@ -49,8 +56,25 @@ fun RegisterScreen2(
     var confirmPasswordError by remember { mutableStateOf("") }
     var termsError by remember { mutableStateOf("") }
 
+
+    // Collect signup state
+    val signupState by signUpViewModel.signupState.collectAsState()
+
+    // Handle signup state changes
+    LaunchedEffect(signupState) {
+        when (signupState) {
+            is AuthState.Success -> {
+                // Navigate to login screen
+                navController.navigate(Screen.Login.route)
+                signUpViewModel.resetSignupState()
+            }
+            else -> {}
+        }
+    }
+
+
     fun isValidEmail(email: String): Boolean {
-        return android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()
+        return Patterns.EMAIL_ADDRESS.matcher(email).matches()
     }
 
     fun calculatePasswordStrength(password: String): Int {
@@ -208,16 +232,25 @@ fun RegisterScreen2(
                 )
             }
 
+            // Show signup error from ViewModel
+            if (signupState is AuthState.Error) {
+                Text(
+                    text = (signupState as AuthState.Error).message,
+                    color = Color.Red,
+                    modifier = Modifier.fillMaxWidth()
+                )
+            }
+
             Spacer(modifier = Modifier.height(24.dp))
 
             ReuseAbleButton(
-                text = "Sign up",
+                text = if (signupState is AuthState.Loading) "Loading..." else "Register",
                 onClick = {
                     if (validateForm()) {
-                        // Navigate to the main screen
-                        //navController.navigate(Screen.Main.route)
+                        signUpViewModel.signUp(email, password, fullName)
                     }
-                }
+                },
+                enabled = signupState !is AuthState.Loading
             )
 
             Spacer(modifier = Modifier.height(16.dp))
