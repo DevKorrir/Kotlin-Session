@@ -11,6 +11,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarDuration
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -18,6 +22,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -33,6 +38,8 @@ import com.example.playground.ui.features.auth.login.componets.LogInLink
 import com.example.playground.ui.features.auth.login.componets.LoginTitle
 import com.example.playground.ui.features.auth.login.componets.RememberAndForgot
 import com.example.playground.ui.features.auth.login.viewModel.LoginViewModel
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -55,14 +62,38 @@ fun LoginScreen(
     //collect login state
     val loginState by loginViewModel.loginState.collectAsState()
 
+    // Snackbar state
+    val snackbarHostState = remember { SnackbarHostState() }
+    val scope = rememberCoroutineScope()
+
+
     // Handle login state changes
     LaunchedEffect(loginState) {
         when (loginState) {
             is AuthState.Success -> {
+
+                scope.launch {
+                    snackbarHostState.showSnackbar(
+                        message = "Login successful!",
+                        duration = SnackbarDuration.Short
+                    )
+                }
+
+                delay(2000)
+
                 // Navigate to home screen
                 onLoginSuccess()
 
                 loginViewModel.resetLoginState()
+            }
+            is AuthState.Error -> {
+                scope.launch {
+                    snackbarHostState.showSnackbar(
+                        message = (loginState as AuthState.Error).message,
+                        duration = SnackbarDuration.Long
+                    )
+                }
+
             }
             else -> {}
         }
@@ -102,92 +133,93 @@ fun LoginScreen(
         return isValid
     }
 
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(AppColors.Background)
-    ) {
-
-        Column(
+    Scaffold(
+        snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
+        containerColor = AppColors.Background
+    ) { paddingValues ->
+        Box(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(horizontal = 24.dp)
-                .verticalScroll(rememberScrollState()),
-            horizontalAlignment = Alignment.CenterHorizontally
+                .background(AppColors.Background)
+                .padding(paddingValues)
         ) {
-            Spacer(modifier = Modifier.height(120.dp))
 
-            LoginTitle()
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(horizontal = 24.dp)
+                    .verticalScroll(rememberScrollState()),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Spacer(modifier = Modifier.height(120.dp))
 
-            Spacer(modifier = Modifier.height(32.dp))
+                LoginTitle()
 
-            LoginForm(
-                modifier = Modifier,
-                email = email ,
-                onEmailChange = {
-                    email = it
-                    if (emailError.isNotEmpty()) emailError = "" // Clear error when typing
-                },
-                password = password,
-                onPasswordChange = {
-                    password = it
-                    if (passwordError.isNotEmpty()) passwordError = ""
-                },
-                emailError = emailError,
-                passwordError = passwordError,
-                onDone = {
-                    if (validateLoginForm()) {
-                        onLoginSuccess()
+                Spacer(modifier = Modifier.height(32.dp))
+
+                LoginForm(
+                    modifier = Modifier,
+                    email = email,
+                    onEmailChange = {
+                        email = it
+                        if (emailError.isNotEmpty()) emailError = "" // Clear error when typing
+                    },
+                    password = password,
+                    onPasswordChange = {
+                        password = it
+                        if (passwordError.isNotEmpty()) passwordError = ""
+                    },
+                    emailError = emailError,
+                    passwordError = passwordError,
+                    isPasswordVisible = isPasswordVisible,
+                    onPasswordVisibilityToggle = {
+                        isPasswordVisible = !isPasswordVisible
                     }
-                },
-                isPasswordVisible = isPasswordVisible,
-                onPasswordVisibilityToggle =  {
-                    isPasswordVisible = !isPasswordVisible
-                }
-            )
-
-            if (loginState is AuthState.Error) {
-                Text(
-                    text = (loginState as AuthState.Error).message,
-                    color = Color.Red,
-                    modifier = Modifier.fillMaxWidth()
                 )
+
+                if (loginState is AuthState.Error) {
+                    Text(
+                        text = (loginState as AuthState.Error).message,
+                        color = Color.Red,
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                }
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                RememberAndForgot(
+                    isRememberMe = isRememberMe,
+                    onRememberChange = { isRememberMe = it },
+                    onForgotClick = {
+
+                    }
+                )
+
+
+                Spacer(modifier = Modifier.height(24.dp))
+
+                ReuseAbleButton(
+                    text = if (loginState is AuthState.Loading) "Loading..." else "Login",
+                    onClick = {
+                        if (validateLoginForm()) {
+                            loginViewModel.login(email, password)
+                        }
+                    },
+                    enabled = loginState !is AuthState.Loading
+                )
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                LogInLink(
+                    onLogInClick = {
+                        navController.navigate(Screen.Signup.route)
+                    }
+                )
+
+                Spacer(modifier = Modifier.height(32.dp))
             }
 
-            Spacer(modifier = Modifier.height(16.dp))
-
-            RememberAndForgot(
-                isRememberMe = isRememberMe,
-                onRememberChange = { isRememberMe = it },
-                onForgotClick = {
-
-                }
-            )
-
-
-            Spacer(modifier = Modifier.height(24.dp))
-
-            ReuseAbleButton(
-                text = if (loginState is AuthState.Loading) "Loading..." else "Login",
-                onClick = {
-                    if (validateLoginForm()) {
-                        loginViewModel.login(email, password)
-                    }
-                },
-                enabled = loginState !is AuthState.Loading
-            )
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            LogInLink(
-                onLogInClick = {
-                    navController.navigate(Screen.Signup.route)
-                }
-            )
-
-            Spacer(modifier = Modifier.height(32.dp))
         }
-
     }
 
 

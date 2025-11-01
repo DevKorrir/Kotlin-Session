@@ -27,7 +27,6 @@ fun LoginForm(
     onPasswordVisibilityToggle: () -> Unit,
     emailError: String = "",
     passwordError: String = "",
-    onDone: () -> Unit = {}
 ) {
 
     ReuseAbleTextField(
@@ -41,7 +40,6 @@ fun LoginForm(
             imeAction = ImeAction.Next
         ),
         maxLines = 1,
-        onDone = onDone
     )
 
     // Show email error
@@ -67,7 +65,6 @@ fun LoginForm(
             keyboardType = KeyboardType.Password,
             imeAction = ImeAction.Done
         ),
-        onDone = onDone
     )
     // Show password error
     if (passwordError.isNotEmpty()) {

@@ -11,6 +11,10 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarDuration
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -18,6 +22,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -33,6 +38,8 @@ import com.example.playground.ui.features.auth.signup.componets.TermsAndConditio
 import com.example.playground.navigation.Screen
 import com.example.playground.ui.features.auth.authShared.AuthState
 import com.example.playground.ui.features.auth.signup.viewModel.SignupViewModel
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 
 @Composable
@@ -60,13 +67,35 @@ fun RegisterScreen2(
     // Collect signup state
     val signupState by signUpViewModel.signupState.collectAsState()
 
+    // Snackbar state
+    val snackbarHostState = remember { SnackbarHostState() }
+    val scope = rememberCoroutineScope()
+
     // Handle signup state changes
     LaunchedEffect(signupState) {
         when (signupState) {
             is AuthState.Success -> {
+
+                // Show success snackbar
+                scope.launch {
+                    snackbarHostState.showSnackbar(
+                        message = "Verification email sent! Please check your inbox.",
+                        duration = SnackbarDuration.Long
+                    )
+                }
+
+                delay(3000)
                 // Navigate to login screen
                 navController.navigate(Screen.Login.route)
                 signUpViewModel.resetSignupState()
+            }
+            is AuthState.Error -> {
+                scope.launch {
+                    snackbarHostState.showSnackbar(
+                        message = (signupState as AuthState.Error).message,
+                        duration = SnackbarDuration.Short
+                    )
+                }
             }
             else -> {}
         }
@@ -148,12 +177,17 @@ fun RegisterScreen2(
         return isValid
     }
 
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(AppColors.Background)
-    ) {
-        // Top leaves decoration
+    Scaffold(
+        snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
+        containerColor = AppColors.Background
+    ) { paddingValues ->
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(AppColors.Background)
+                .padding(paddingValues)
+        ) {
+            // Top leaves decoration
 //        Image(
 //            painter = painterResource(id = R.drawable.twitter),
 //            contentDescription = null,
@@ -162,7 +196,7 @@ fun RegisterScreen2(
 //                .size(120.dp)
 //        )
 
-        // Bottom leaves decoration
+            // Bottom leaves decoration
 //        Image(
 //            painter = painterResource(id = R.drawable.plant_leaf),
 //            contentDescription = null,
@@ -171,97 +205,98 @@ fun RegisterScreen2(
 //                .size(120.dp)
 //        )
 
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(horizontal = 24.dp)
-                .verticalScroll(rememberScrollState()),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Spacer(modifier = Modifier.height(120.dp))
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(horizontal = 24.dp)
+                    .verticalScroll(rememberScrollState()),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Spacer(modifier = Modifier.height(120.dp))
 
-            RegisterTitle()
+                RegisterTitle()
 
-            Spacer(modifier = Modifier.height(32.dp))
+                Spacer(modifier = Modifier.height(32.dp))
 
-            RegisterForm(
-                fullName = fullName,
-                onFullNameChange = {
-                    fullName = it
-                    if (nameError.isNotEmpty()) nameError = "" // Clear error when typing
-                },
-                email = email,
-                onEmailChange = {
-                    email = it
-                    if (emailError.isNotEmpty()) emailError = ""
-                },
-                password = password,
-                onPasswordChange = {
-                    password = it
-                    if (passwordError.isNotEmpty()) passwordError = ""
-                },
-                isPasswordVisible = isPasswordVisible,
-                onPasswordVisibilityToggle = { isPasswordVisible = !isPasswordVisible },
-                confirmPassword = confirmPassword,
-                onConfirmPasswordChange = {
-                    confirmPassword = it
-                    if (confirmPasswordError.isNotEmpty()) confirmPasswordError = ""
-                },
-                isConfirmPasswordVisible = isConfirmPasswordVisible,
-                onConfirmPasswordVisibilityToggle = {
-                    isConfirmPasswordVisible = !isConfirmPasswordVisible
-                },
-                nameError = nameError,
-                emailError = emailError,
-                passwordError = passwordError,
-                confirmPasswordError = confirmPasswordError
-            )
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            TermsAndConditions(
-                isAccepted = isTermsAccepted,
-                onAcceptedChange = { isTermsAccepted = it }
-            )
-
-            if (termsError.isNotEmpty()) {
-                Text(
-                    text = termsError,
-                    color = Color.Red,
-                    modifier = Modifier.fillMaxWidth()
+                RegisterForm(
+                    fullName = fullName,
+                    onFullNameChange = {
+                        fullName = it
+                        if (nameError.isNotEmpty()) nameError = "" // Clear error when typing
+                    },
+                    email = email,
+                    onEmailChange = {
+                        email = it
+                        if (emailError.isNotEmpty()) emailError = ""
+                    },
+                    password = password,
+                    onPasswordChange = {
+                        password = it
+                        if (passwordError.isNotEmpty()) passwordError = ""
+                    },
+                    isPasswordVisible = isPasswordVisible,
+                    onPasswordVisibilityToggle = { isPasswordVisible = !isPasswordVisible },
+                    confirmPassword = confirmPassword,
+                    onConfirmPasswordChange = {
+                        confirmPassword = it
+                        if (confirmPasswordError.isNotEmpty()) confirmPasswordError = ""
+                    },
+                    isConfirmPasswordVisible = isConfirmPasswordVisible,
+                    onConfirmPasswordVisibilityToggle = {
+                        isConfirmPasswordVisible = !isConfirmPasswordVisible
+                    },
+                    nameError = nameError,
+                    emailError = emailError,
+                    passwordError = passwordError,
+                    confirmPasswordError = confirmPasswordError
                 )
-            }
 
-            // Show signup error from ViewModel
-            if (signupState is AuthState.Error) {
-                Text(
-                    text = (signupState as AuthState.Error).message,
-                    color = Color.Red,
-                    modifier = Modifier.fillMaxWidth()
+                Spacer(modifier = Modifier.height(16.dp))
+
+                TermsAndConditions(
+                    isAccepted = isTermsAccepted,
+                    onAcceptedChange = { isTermsAccepted = it }
                 )
-            }
 
-            Spacer(modifier = Modifier.height(24.dp))
-
-            ReuseAbleButton(
-                text = if (signupState is AuthState.Loading) "Loading..." else "Register",
-                onClick = {
-                    if (validateForm()) {
-                        signUpViewModel.signUp(email, password, fullName)
-                    }
-                },
-                enabled = signupState !is AuthState.Loading
-            )
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            SignInLink(
-                onSignInClick = {
-                    navController.navigate(Screen.Login.route)
+                if (termsError.isNotEmpty()) {
+                    Text(
+                        text = termsError,
+                        color = Color.Red,
+                        modifier = Modifier.fillMaxWidth()
+                    )
                 }
-            )
 
-            Spacer(modifier = Modifier.height(32.dp))
+                // Show signup error from ViewModel
+                if (signupState is AuthState.Error) {
+                    Text(
+                        text = (signupState as AuthState.Error).message,
+                        color = Color.Red,
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                }
+
+                Spacer(modifier = Modifier.height(24.dp))
+
+                ReuseAbleButton(
+                    text = if (signupState is AuthState.Loading) "Loading..." else "Register",
+                    onClick = {
+                        if (validateForm()) {
+                            signUpViewModel.signUp(email, password, fullName)
+                        }
+                    },
+                    enabled = signupState !is AuthState.Loading
+                )
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                SignInLink(
+                    onSignInClick = {
+                        navController.navigate(Screen.Login.route)
+                    }
+                )
+
+                Spacer(modifier = Modifier.height(32.dp))
+            }
         }
     }
 

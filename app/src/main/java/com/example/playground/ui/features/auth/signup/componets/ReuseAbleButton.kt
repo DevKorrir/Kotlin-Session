@@ -18,7 +18,7 @@ fun ReuseAbleButton(
     text: String,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
-    enabled: Boolean = true
+    enabled: Boolean
 ) {
     Button(
         onClick = onClick,
