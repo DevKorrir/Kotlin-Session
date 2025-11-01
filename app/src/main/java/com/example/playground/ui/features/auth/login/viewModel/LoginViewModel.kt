@@ -25,8 +25,8 @@ class LoginViewModel : ViewModel() {
             _loginState.value = AuthState.Error("Please enter a valid email")
             return
         }
-        if (password.isEmpty() || password.length < 6) {
-            _loginState.value = AuthState.Error("Password must be at least 6 characters")
+        if (password.isEmpty() || password.length < 8) {
+            _loginState.value = AuthState.Error("Password must be at least 8 characters")
             return
         }
 
@@ -35,7 +35,22 @@ class LoginViewModel : ViewModel() {
         viewModelScope.launch {
             try {
                 val result: AuthResult = auth.signInWithEmailAndPassword(email, password).await()
-                _loginState.value = AuthState.Success("Login successful!")
+                //_loginState.value = AuthState.Success("Login successful!")
+                // Check if email is verified
+                val user = result.user
+                if (user != null) {
+                    if (user.isEmailVerified) {
+                        _loginState.value = AuthState.Success("Login successful!")
+                    } else {
+                        // If email not verified, send verification again and show message
+                        user.sendEmailVerification().await()
+                        _loginState.value = AuthState.Error(
+                            "Please verify your email first. We've sent a new verification email to ${user.email}"
+                        )
+                        // Sign out the user since email is not verified
+                        auth.signOut()
+                    }
+                }
             } catch (e: Exception) {
                 _loginState.value = AuthState.Error("Login failed: ${e.message}")
             }

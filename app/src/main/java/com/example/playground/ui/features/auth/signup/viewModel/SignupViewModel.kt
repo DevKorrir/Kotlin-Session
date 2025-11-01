@@ -47,8 +47,13 @@ class SignupViewModel : ViewModel() {
                         .setDisplayName(fullName)
                         .build()
                 )?.await()
-                
-                _signupState.value = AuthState.Success("Signup successful!")
+
+                // Send email verification
+                result.user?.sendEmailVerification()?.await()
+
+                _signupState.value = AuthState.Success(
+                    "Account created! Please check your email to verify your account before logging in."
+                )
             } catch (e: Exception) {
                 _signupState.value = AuthState.Error("Signup failed: ${e.message}")
             }
