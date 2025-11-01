@@ -100,6 +100,8 @@ fun RegisterScreen2(
         } else if (calculatePasswordStrength(password) < 3) {
             passwordError = "Password is too weak"
             isValid = false
+        } else {
+            passwordError = ""
         }
 
         // Confirm password validation
@@ -115,6 +117,8 @@ fun RegisterScreen2(
         if (!isTermsAccepted) {
             termsError = "You must accept terms and conditions"
             isValid = false
+        } else {
+            termsError = ""
         }
 
         return isValid

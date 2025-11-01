@@ -1,13 +1,16 @@
 package com.example.playground.ui.features.auth.login.view
 
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.LockOpen
 import androidx.compose.material.icons.filled.MailOutline
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
@@ -22,6 +25,9 @@ fun LoginForm(
     onPasswordChange: (String) -> Unit,
     isPasswordVisible: Boolean,
     onPasswordVisibilityToggle: () -> Unit,
+    emailError: String = "",
+    passwordError: String = "",
+    onDone: () -> Unit = {}
 ) {
 
     ReuseAbleTextField(
@@ -35,7 +41,17 @@ fun LoginForm(
             imeAction = ImeAction.Next
         ),
         maxLines = 1,
+        onDone = onDone
     )
+
+    // Show email error
+    if (emailError.isNotEmpty()) {
+        Text(
+            text = emailError,
+            color = Color.Red,
+            modifier = Modifier.fillMaxWidth()
+        )
+    }
 
     Spacer(modifier = Modifier.height(16.dp))
 
@@ -51,6 +67,15 @@ fun LoginForm(
             keyboardType = KeyboardType.Password,
             imeAction = ImeAction.Next
         ),
+        onDone = onDone
     )
+    // Show password error
+    if (passwordError.isNotEmpty()) {
+        Text(
+            text = passwordError,
+            color = Color.Red,
+            modifier = Modifier.fillMaxWidth()
+        )
+    }
 
 }
