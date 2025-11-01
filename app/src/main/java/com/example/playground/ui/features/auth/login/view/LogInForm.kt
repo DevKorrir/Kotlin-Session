@@ -65,7 +65,7 @@ fun LoginForm(
         onPasswordVisibilityToggle = onPasswordVisibilityToggle,
         keyboardOptions = KeyboardOptions(
             keyboardType = KeyboardType.Password,
-            imeAction = ImeAction.Next
+            imeAction = ImeAction.Done
         ),
         onDone = onDone
     )
