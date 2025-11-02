@@ -51,6 +51,9 @@ dependencies {
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
     implementation(libs.firebase.auth)
+    implementation(libs.androidx.credentials)
+    implementation(libs.androidx.credentials.play.services.auth)
+    implementation(libs.googleid)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -68,6 +71,9 @@ dependencies {
 
     // Coil for image loading
     implementation(libs.coil.compose)
+
+    //google sign in
+    implementation("com.google.android.gms:play-services-auth:21.4.0")
 
     //extend icons
     implementation("androidx.compose.material:material-icons-extended-android:1.7.8")

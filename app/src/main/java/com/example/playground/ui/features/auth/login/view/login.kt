@@ -13,10 +13,12 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -49,6 +51,7 @@ import com.example.playground.ui.features.auth.authShared.AuthState
 import com.example.playground.ui.features.auth.login.componets.LogInLink
 import com.example.playground.ui.features.auth.login.componets.LoginTitle
 import com.example.playground.ui.features.auth.login.componets.RememberAndForgot
+import com.example.playground.ui.features.auth.login.viewModel.GoogleAuthViewModel
 import com.example.playground.ui.features.auth.login.viewModel.LoginViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -59,7 +62,8 @@ fun LoginScreen(
     modifier: Modifier = Modifier,
     onLoginSuccess: () -> Unit = {},
     navController: NavController,
-    loginViewModel: LoginViewModel = viewModel()
+    loginViewModel: LoginViewModel = viewModel(),
+    googleAuthViewModel: GoogleAuthViewModel = viewModel() // call the viewmodel
 ) {
 
     var email by remember { mutableStateOf("")}
@@ -73,6 +77,10 @@ fun LoginScreen(
 
     //collect login state
     val loginState by loginViewModel.loginState.collectAsState()
+
+    // collect google authstate
+    val googleAuthState by googleAuthViewModel.authState.collectAsState()
+
 
     // Snackbar state
     val snackbarHostState = remember { SnackbarHostState() }
@@ -109,6 +117,40 @@ fun LoginScreen(
             }
             else -> {}
         }
+    }
+
+    // haldle google auth state changes
+    LaunchedEffect(googleAuthState) {
+        when (googleAuthState) {
+            is AuthState.Success -> {
+                scope.launch {
+                    snackbarHostState.showSnackbar(
+                        message = "Login successful!",
+                        duration = SnackbarDuration.Short
+                    )
+                }
+
+                delay(2000)
+
+                // Navigate to home screen
+                onLoginSuccess()
+
+                googleAuthViewModel.resetAuthState()
+
+            }
+            is AuthState.Error -> {
+                scope.launch {
+                    snackbarHostState.showSnackbar(
+                        message = (googleAuthState as AuthState.Error).message,
+                        duration = SnackbarDuration.Long
+                    )
+                }
+
+            }
+            else -> {}
+
+        }
+
     }
 
 
@@ -244,12 +286,16 @@ fun LoginScreen(
 
                 OutlinedButton(
                     onClick = {
-                        //loginViewModel.loginWithGoogle()
+                        // call the sign in with google function
+                        scope.launch {
+                            googleAuthViewModel.signInWithGoogle(context = navController.context)
+                        }
                     },
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(56.dp),
-                    shape = RoundedCornerShape(12.dp)
+                    shape = RoundedCornerShape(12.dp),
+                    enabled = googleAuthState !is AuthState.Loading // disable button when loading
                 ) {
                     Row (
                         modifier = Modifier
@@ -258,21 +304,43 @@ fun LoginScreen(
                         horizontalArrangement = Arrangement.Center,
                         verticalAlignment = Alignment.CenterVertically,
                     ){
-                        Icon(
-                            painter = painterResource(id = com.example.playground.R.drawable.google),
-                            contentDescription = null,
-                            tint = Color.Unspecified,
-                            modifier = Modifier,
-                        )
+                        // SHOW LOADING OR GOOGLE ICON
+                        if (googleAuthState is AuthState.Loading) {
+                            // Show loading indicator
+                            CircularProgressIndicator(
+                                modifier = Modifier.size(24.dp),
+                                color = Color.Green,
+                                strokeWidth = 2.dp
+                            )
+                        } else {
 
-                        Spacer(modifier = Modifier.width(8.dp))
+                            Icon(
+                                painter = painterResource(id = com.example.playground.R.drawable.google),
+                                contentDescription = null,
+                                tint = Color.Unspecified,
+                                modifier = Modifier,
+                            )
+
+                            Spacer(modifier = Modifier.width(8.dp))
 
 
-                        Text(
-                            text = "Login with Google",
-                            color = Color.Black,
-                        )
+                            Text(
+                                text = "Login with Google",
+                                color = Color.Black,
+                            )
+                        }
                     }
+                }
+
+                // SHOW GOOGLE AUTH ERRORS
+                if (googleAuthState is AuthState.Error) {
+                    Text(
+                        text = (googleAuthState as AuthState.Error).message,
+                        color = Color.Red,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(top = 8.dp)
+                    )
                 }
 
                 Spacer(modifier = Modifier.height(16.dp))
