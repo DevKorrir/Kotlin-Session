@@ -4,7 +4,8 @@ import androidx.compose.material3.Switch
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import com.example.playground.ui.features.settings.viewModel.ThemeViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.playground.ui.features.sharedPreference.themePrefs.viewModel.ThemeViewModel
 
 @Composable
 fun ThemeToggle(
