@@ -7,11 +7,16 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.navArgument
 import com.example.playground.ui.features.auth.signup.view.RegisterScreen2
 import com.example.playground.ui.features.auth.login.view.LoginScreen
+import com.example.playground.ui.features.write.elements.EditProductScreen
+import com.example.playground.ui.features.write.viewmodel.ProductViewModel
 
 // --- Navigation Graph ---
 @OptIn(ExperimentalMaterial3Api::class)
@@ -64,6 +69,19 @@ fun AppNavigation(
                     navController = navController
                 )
             }
+
+//            composable(
+//                route = "edit_product/{productId}",
+//                arguments = listOf(navArgument("productId") { type = NavType.IntType })
+//            ) { backStackEntry ->
+//                val viewModel: ProductViewModel = hiltViewModel()
+//                val productId = backStackEntry.arguments?.getInt("productId") ?: return@composable
+//                EditProductScreen(
+//                    viewModel = viewModel,
+//                    productId = productId,
+//                    onNavigateBack = { navController.popBackStack() }
+//                )
+//            }
 
 
 

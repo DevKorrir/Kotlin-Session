@@ -4,10 +4,10 @@
     <selectionStates>
       <SelectionState runConfigName="app">
         <option name="selectionMode" value="DROPDOWN" />
-        <DropdownSelection timestamp="2025-11-02T07:24:10.699041242Z">
+        <DropdownSelection timestamp="2025-11-05T11:01:23.775010558Z">
           <Target type="DEFAULT_BOOT">
             <handle>
-              <DeviceId pluginId="LocalEmulator" identifier="path=/home/korryr/.config/.android/avd/Medium_Phone.avd" />
+              <DeviceId pluginId="LocalEmulator" identifier="path=/home/korryr/.config/.android/avd/Pixel_8.avd" />
             </handle>
           </Target>
         </DropdownSelection>

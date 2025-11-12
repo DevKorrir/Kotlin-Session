@@ -2,10 +2,12 @@ package com.example.playground.navigation
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AddBusiness
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.ProductionQuantityLimits
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -26,12 +28,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.example.playground.ui.features.home.view.HomeScreen
 import com.example.playground.ui.features.profile.view.ProfileScreen
+import com.example.playground.ui.features.read.view.ProductListScreen
+import com.example.playground.ui.features.write.elements.EditProductScreen
+import com.example.playground.ui.features.write.view.AddProductScreen
 import kotlinx.coroutines.launch
 
 
@@ -55,7 +62,9 @@ fun MainLayout(
 
     val bottomNavItems = listOf(
         BottomNavItem("Home", Screen.BottomHome.route, Icons.Default.Home),
-        BottomNavItem("Profile", Screen.BottomProfile.route, Icons.Default.Person)
+        BottomNavItem("Read", Screen.BottomRead.route, Icons.Default.ProductionQuantityLimits),
+        BottomNavItem("Write", Screen.BottomWrite.route, Icons.Default.AddBusiness),
+        BottomNavItem("Profile", Screen.BottomProfile.route, Icons.Default.Person),
     )
 
     val drawerItems = listOf(
@@ -141,9 +150,36 @@ fun MainLayout(
                     HomeScreen()
                 }
 
+
+                composable(Screen.BottomRead.route) {
+                    ProductListScreen(
+                        onAddProduct = {
+                            bottomLevelNavController.navigate(Screen.BottomWrite.route)
+                        },
+                        onEditProduct = { productId ->
+                            bottomLevelNavController.navigate("edit_product/$productId")
+                        }
+                    )
+                }
+
+                composable(Screen.BottomWrite.route) {
+                    // This handles adding a new product (no productId)
+                    AddProductScreen()
+                }
+
+
+                composable(
+                    route = "edit_product/{productId}",
+                    arguments = listOf(navArgument("productId") { type = NavType.StringType })
+                ) {
+                    EditProductScreen ()
+                }
+
                 composable(Screen.BottomProfile.route) {
                     ProfileScreen()
                 }
+
+
 
             }
         }

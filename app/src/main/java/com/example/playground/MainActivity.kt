@@ -12,11 +12,14 @@ import androidx.navigation.compose.rememberNavController
 import com.example.playground.navigation.AppNavigation
 import com.example.playground.ui.features.sharedPreference.themePrefs.viewModel.ThemeViewModel
 import com.example.playground.ui.theme.PlayGroundTheme
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         enableEdgeToEdge()
         setContent {
             // Top-level navController (controls Login <-> Main)

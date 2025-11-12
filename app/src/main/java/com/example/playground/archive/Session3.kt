@@ -1,4 +1,4 @@
-package com.example.playground
+package com.example.playground.archive
 
 import android.annotation.SuppressLint
 import android.widget.Toast
@@ -54,6 +54,7 @@ import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.playground.R
 
 @SuppressLint("DefaultLocale")
 @Composable

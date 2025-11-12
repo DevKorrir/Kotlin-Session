@@ -3,6 +3,10 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.google.gms.google.services)
+    id("kotlin-kapt")
+    alias(libs.plugins.hilt.android)
+    alias(libs.plugins.ksp)
+
 }
 
 android {
@@ -38,6 +42,12 @@ android {
     buildFeatures {
         compose = true
     }
+
+
+    // Add this block to explicitly set the version
+    composeOptions {
+        kotlinCompilerExtensionVersion = "1.5.14" // Use the version that matches your Kotlin version
+    }
 }
 
 dependencies {
@@ -54,6 +64,7 @@ dependencies {
     implementation(libs.androidx.credentials)
     implementation(libs.androidx.credentials.play.services.auth)
     implementation(libs.googleid)
+    implementation(libs.material3)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -80,6 +91,23 @@ dependencies {
 
     //data store
     implementation("androidx.datastore:datastore-preferences:1.1.7")
+
+    // Room
+    implementation ("androidx.room:room-runtime:2.8.3")
+    kapt ("androidx.room:room-compiler:2.8.3")
+    implementation ("androidx.room:room-ktx:2.8.3")
+
+// ViewModel & LiveData
+    implementation ("androidx.lifecycle:lifecycle-viewmodel-ktx:2.9.4")
+    implementation ("androidx.lifecycle:lifecycle-livedata-ktx:2.9.4")
+
+    implementation("androidx.lifecycle:lifecycle-runtime-compose:2.9.4")
+
+    //hilt
+    implementation(libs.hilt.android)
+    ksp(libs.hilt.compiler)
+    implementation(libs.hilt.navigation.compose)
+
 
 
 }
