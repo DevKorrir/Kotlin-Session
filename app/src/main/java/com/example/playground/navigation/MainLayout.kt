@@ -170,9 +170,15 @@ fun MainLayout(
 
                 composable(
                     route = "edit_product/{productId}",
-                    arguments = listOf(navArgument("productId") { type = NavType.StringType })
-                ) {
-                    EditProductScreen ()
+                    arguments = listOf(navArgument("productId") { type = NavType.IntType })
+                ) { backStackEntry ->
+                    val productId = backStackEntry.arguments?.getInt("productId") ?: 0
+                    EditProductScreen(
+                        productId = productId,
+                        onNavigateBack = {
+                            bottomLevelNavController.popBackStack()
+                        }
+                    )
                 }
 
                 composable(Screen.BottomProfile.route) {

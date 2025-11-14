@@ -17,8 +17,11 @@ interface ProductDao {
     @Query("SELECT * FROM products ORDER BY timestamp DESC")
     fun getAllProducts(): Flow<List<Product>>
     
-    @Query("SELECT * FROM products WHERE id = :productId")
-    suspend fun getProductById(productId: Int): Product?
+//    @Query("SELECT * FROM products WHERE id = :productId")
+//    suspend fun getProductById(productId: Int): Product?
+
+    @Query("SELECT * FROM products WHERE id = :id")
+    suspend fun getProductById(id: Int): Product?
     
     // UPDATE
     @Update
