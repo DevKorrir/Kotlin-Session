@@ -42,9 +42,11 @@ import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import com.example.playground.ui.features.auth.signup.componets.ReuseAbleButton
 import com.example.playground.ui.features.auth.signup.componets.ReuseAbleTextField
+import com.example.playground.ui.features.firestoredb.viewmodel.ProductListViewModel
 import com.example.playground.ui.features.write.viewmodel.ProductUiState
 import com.example.playground.ui.features.write.viewmodel.ProductViewModel
 
@@ -52,6 +54,7 @@ import com.example.playground.ui.features.write.viewmodel.ProductViewModel
 @Composable
 fun AddProductScreen(
     viewModel: ProductViewModel = hiltViewModel(),
+    productListViewModel: ProductListViewModel = viewModel(),
     onNavigateBack: () -> Unit = {}
 ) {
     var name by remember { mutableStateOf("") }

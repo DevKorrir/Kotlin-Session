@@ -23,9 +23,9 @@
               <option name="connection">
                 <ConnectionSetting>
                   <option name="appId" value="com.example.playground" />
-                  <option name="mobileSdkAppId" value="1:921689240113:android:aba9cdb5ca74e759e71b10" />
-                  <option name="projectId" value="playground-dev-8367" />
-                  <option name="projectNumber" value="921689240113" />
+                  <option name="mobileSdkAppId" value="1:796439013355:android:5f555cae8148f0ecec1bae" />
+                  <option name="projectId" value="kotlinprojects-1fea0" />
+                  <option name="projectNumber" value="796439013355" />
                 </ConnectionSetting>
               </option>
               <option name="signal" value="SIGNAL_UNSPECIFIED" />

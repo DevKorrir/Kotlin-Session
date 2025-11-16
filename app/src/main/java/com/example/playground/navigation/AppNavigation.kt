@@ -7,16 +7,11 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.NavHostController
-import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import androidx.navigation.navArgument
-import com.example.playground.ui.features.auth.signup.view.RegisterScreen2
 import com.example.playground.ui.features.auth.login.view.LoginScreen
-import com.example.playground.ui.features.write.elements.EditProductScreen
-import com.example.playground.ui.features.write.viewmodel.ProductViewModel
+import com.example.playground.ui.features.auth.signup.view.RegisterScreen2
 
 // --- Navigation Graph ---
 @OptIn(ExperimentalMaterial3Api::class)
@@ -29,7 +24,7 @@ fun AppNavigation(
         NavHost(
             modifier = Modifier,
             navController = navController,
-            startDestination = Screen.Main.route
+            startDestination = Screen.Login.route
         ) {
             // Login screen composable
             composable(Screen.Login.route) {

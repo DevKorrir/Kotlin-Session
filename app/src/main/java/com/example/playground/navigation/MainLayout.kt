@@ -34,6 +34,9 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.example.playground.ui.features.firestoredb.view.FireAddProductScreen
+import com.example.playground.ui.features.firestoredb.view.FireEditProductScreen
+import com.example.playground.ui.features.firestoredb.view.FireProductListScreen
 import com.example.playground.ui.features.home.view.HomeScreen
 import com.example.playground.ui.features.profile.view.ProfileScreen
 import com.example.playground.ui.features.read.view.ProductListScreen
@@ -152,7 +155,7 @@ fun MainLayout(
 
 
                 composable(Screen.BottomRead.route) {
-                    ProductListScreen(
+                    FireProductListScreen(
                         onAddProduct = {
                             bottomLevelNavController.navigate(Screen.BottomWrite.route)
                         },
@@ -164,16 +167,16 @@ fun MainLayout(
 
                 composable(Screen.BottomWrite.route) {
                     // This handles adding a new product (no productId)
-                    AddProductScreen()
+                    FireAddProductScreen()
                 }
 
 
                 composable(
                     route = "edit_product/{productId}",
-                    arguments = listOf(navArgument("productId") { type = NavType.IntType })
+                    arguments = listOf(navArgument("productId") { type = NavType.StringType })
                 ) { backStackEntry ->
-                    val productId = backStackEntry.arguments?.getInt("productId") ?: 0
-                    EditProductScreen(
+                    val productId = backStackEntry.arguments?.getString("productId") ?: ""
+                    FireEditProductScreen(
                         productId = productId,
                         onNavigateBack = {
                             bottomLevelNavController.popBackStack()

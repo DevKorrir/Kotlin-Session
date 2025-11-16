@@ -27,6 +27,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.playground.ui.features.firestoredb.viewmodel.ProductListViewModel
 import com.example.playground.ui.features.read.elements.ProductCard
 import com.example.playground.ui.features.write.data.Product
 import com.example.playground.ui.features.write.viewmodel.ProductViewModel
@@ -34,6 +36,7 @@ import com.example.playground.ui.features.write.viewmodel.ProductViewModel
 @Composable
 fun ProductListScreen(
     viewModel: ProductViewModel = hiltViewModel(),
+    productListViewModel: ProductListViewModel = viewModel(),
     onAddProduct: () -> Unit,
     onEditProduct: (Int) -> Unit
 ) {
